@@ -16,6 +16,13 @@ Two MOJOs are provided
 * upload-files: Scans a base directory and uploads all files, filtered by include/exclude lists
     </description>
 
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
     <scm>
         <url>https://github.com/jgeorgeson/upload-maven-plugin</url>
         <connection>git@github.com:jgeorgeson/upload-maven-plugin.git</connection>
