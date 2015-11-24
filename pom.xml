@@ -8,13 +8,7 @@
     <packaging>maven-plugin</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
     <url>https://github.com/jgeorgeson/upload-maven-plugin</url>
-    <description>This plugin is a fork of the Sonatype maven-upload-plugin which has been abandoned.
-
-Two MOJOs are provided
-
-* upload-file: Upload a single file
-* upload-files: Scans a base directory and uploads all files, filtered by include/exclude lists
-    </description>
+    <description>Upload file(s) to a URL via HTTP PUT</description>
 
     <licenses>
         <license>
@@ -25,8 +19,8 @@ Two MOJOs are provided
 
     <scm>
         <url>https://github.com/jgeorgeson/upload-maven-plugin</url>
-        <connection>git@github.com:jgeorgeson/upload-maven-plugin.git</connection>
-        <developerConnection>git@github.com:jgeorgeson/upload-maven-plugin.git</developerConnection>
+        <connection>scm:git:https://github.com/jgeorgeson/upload-maven-plugin.git</connection>
+        <developerConnection>scm:git:git@github.com:jgeorgeson/upload-maven-plugin.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 
