@@ -1,16 +1,21 @@
 package org.sonatype.maven.plugins.upload;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.UsernamePasswordCredentials;
-import org.apache.commons.httpclient.auth.AuthScope;
-import org.apache.commons.httpclient.methods.InputStreamRequestEntity;
-import org.apache.commons.httpclient.methods.PutMethod;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.FileEntity;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.repository.ArtifactRepositoryPolicy;
 import org.apache.maven.artifact.repository.Authentication;
@@ -30,30 +35,32 @@ public abstract class AbstractUploadMojo
     /** @component */
     protected ArtifactRepositoryLayout repositoryLayout;
 
-    /** @parameter expression="${session}" */
+    /** @parameter property="session" */
     protected MavenSession session;
 
-    /** @parameter expression="${upload.serverId}" */
+    /** @parameter property="upload.serverId" */
     protected String serverId;
 
-    /** @parameter expression="${upload.repositoryUrl}" */
+    /** @parameter property="upload.repositoryUrl" */
     protected String repositoryUrl;
 
-    protected HttpClient getHttpClient( ArtifactRepository repository )
+    protected CloseableHttpClient getHttpClient( ArtifactRepository repository )
         throws MojoExecutionException
     {
-        HttpClient client = new HttpClient();
+        CloseableHttpClient client;
 
         Authentication authentication = repository.getAuthentication();
         if ( authentication != null )
         {
-            client.getState().setCredentials(
-                                              AuthScope.ANY,
-                                              new UsernamePasswordCredentials( authentication.getUsername(),
-                                                                               authentication.getPassword() ) );
-
-            // workaround for https://issues.sonatype.org/browse/NXCM-1321
-            client.getParams().setAuthenticationPreemptive( true );
+            CredentialsProvider credsProvider = new BasicCredentialsProvider();
+            credsProvider.setCredentials(
+                    new AuthScope(AuthScope.ANY),
+                    new UsernamePasswordCredentials(authentication.getUsername(),authentication.getPassword()));
+            client = HttpClients.custom()
+                    .setDefaultCredentialsProvider(credsProvider)
+                    .build();
+        } else {
+        	client = HttpClients.createDefault();
         }
 
         Proxy proxy = repository.getProxy();
@@ -83,28 +90,30 @@ public abstract class AbstractUploadMojo
         return repository;
     }
 
-    protected void uploadFile( HttpClient client, File file, String targetUrl )
+    protected void uploadFile( CloseableHttpClient client, File file, String targetUrl )
         throws MojoExecutionException
     {
         getLog().info( "Uploading " + file.getAbsolutePath() + " to " + targetUrl );
-        PutMethod putMethod = new PutMethod( targetUrl );
+        HttpPut putRequest = new HttpPut(targetUrl);
+        CloseableHttpResponse response = null;
         try
         {
-            String contentType = null;
+            ContentType contentType = null;
             if ( file.getName().endsWith( ".xml" ) )
             {
-                contentType = "application/xml";
+                contentType = ContentType.APPLICATION_XML;
             }
-            putMethod.setRequestEntity( new InputStreamRequestEntity( new FileInputStream( file ), contentType ) );
 
-            client.executeMethod( putMethod );
+            putRequest.setEntity( new FileEntity( file , contentType ) );
 
-            int status = putMethod.getStatusCode();
+            response = client.execute(putRequest);
+
+            int status = response.getStatusLine().getStatusCode();
             if ( status < 200 || status > 299 )
             {
-                String message = "Could not upload file: " + putMethod.getStatusLine().toString();
+                String message = "Could not upload file: " + response.getStatusLine().toString();
                 getLog().error( message );
-                String responseBody = putMethod.getResponseBodyAsString();
+                String responseBody = EntityUtils.toString(response.getEntity());
                 if ( responseBody != null )
                 {
                     getLog().info( responseBody );
@@ -118,7 +127,7 @@ public abstract class AbstractUploadMojo
         }
         finally
         {
-            putMethod.releaseConnection();
+           	putRequest.releaseConnection();
         }
     }
 

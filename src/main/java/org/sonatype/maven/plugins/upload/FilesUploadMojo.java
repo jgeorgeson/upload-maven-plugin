@@ -2,7 +2,7 @@ package org.sonatype.maven.plugins.upload;
 
 import java.io.File;
 
-import org.apache.commons.httpclient.HttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -16,16 +16,16 @@ import org.codehaus.plexus.util.DirectoryScanner;
 public class FilesUploadMojo
     extends AbstractUploadMojo
 {
-    /** @parameter default-value="${project.basedir}" */
+    /** @parameter property="upload.basedir" default-value="${project.basedir}" */
     private File basedir;
 
-    /** @parameter */
+    /** @parameter property="upload.includes" */
     private String[] includes;
 
-    /** @parameter */
+    /** @parameter property="upload.excludes" */
     private String[] excludes;
 
-    /** @parameter */
+    /** @parameter property="upload.repositoryBasePath" */
     private String repositoryBasepath;
 
     public void execute()
@@ -33,7 +33,7 @@ public class FilesUploadMojo
     {
         ArtifactRepository repository = getArtifactRepository();
 
-        HttpClient client = getHttpClient( repository );
+        CloseableHttpClient client = getHttpClient( repository );
 
         DirectoryScanner scanner = new DirectoryScanner();
         scanner.setBasedir( basedir );
