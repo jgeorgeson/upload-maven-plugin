@@ -39,6 +39,7 @@
     </issueManagement>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven-version>3.0.5</maven-version>
         <httpclient-version>4.5.1</httpclient-version>
     </properties>
