@@ -1,44 +1,70 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>org.sonatype.plugins</groupId>
-    <artifactId>plugins-parent</artifactId>
-    <version>9</version>
-  </parent>
+    <groupId>net.lopht</groupId>
+    <artifactId>upload-maven-plugin</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+    <packaging>maven-plugin</packaging>
+    <name>${project.groupId}:${project.artifactId}</name>
+    <url>https://github.com/jgeorgeson/upload-maven-plugin</url>
+    <description>This plugin is a fork of the Sonatype maven-upload-plugin which has been abandoned.
 
-  <artifactId>upload-maven-plugin</artifactId>
-  <version>0.1.0-SNAPSHOT</version>
-  <packaging>maven-plugin</packaging>
-  
-  <properties>
-    <maven-version>3.0.5</maven-version>
-    <httpclient-version>4.5.1</httpclient-version>
-  </properties>
+Two MOJOs are provided
 
-  <dependencies>
-    <dependency>
-      <groupId>org.apache.maven</groupId>
-      <artifactId>maven-plugin-api</artifactId>
-      <version>${maven-version}</version>
-    </dependency>
+* upload-file: Upload a single file
+* upload-files: Scans a base directory and uploads all files, filtered by include/exclude lists
+    </description>
 
-    <dependency>
-      <groupId>org.apache.maven</groupId>
-      <artifactId>maven-compat</artifactId>
-      <version>${maven-version}</version>
-    </dependency>
+    <scm>
+        <url>https://github.com/jgeorgeson/upload-maven-plugin</url>
+        <connection>git@github.com:jgeorgeson/upload-maven-plugin.git</connection>
+        <developerConnection>git@github.com:jgeorgeson/upload-maven-plugin.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
 
-    <dependency>
-      <groupId>org.apache.maven</groupId>
-      <artifactId>maven-core</artifactId>
-      <version>${maven-version}</version>
-    </dependency>
+    <developers>
+        <developer>
+            <email>jgeorgeson@lopht.net</email>
+            <name>Justin Georgeson</name>
+            <url>https://github.com/jgeorgeson</url>
+            <id>jgeorgeson</id>
+        </developer>
+    </developers>
 
-    <dependency>
-      <groupId>org.apache.httpcomponents</groupId>
-      <artifactId>httpclient</artifactId>
-      <version>${httpclient-version}</version>
-    </dependency>
-  </dependencies>
+    <issueManagement>
+        <url>https://github.com/jgeorgeson/upload-maven-plugin/issues</url>
+        <system>GitHub Issues</system>
+    </issueManagement>
+
+    <properties>
+        <maven-version>3.0.5</maven-version>
+        <httpclient-version>4.5.1</httpclient-version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-plugin-api</artifactId>
+            <version>${maven-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-compat</artifactId>
+            <version>${maven-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-core</artifactId>
+            <version>${maven-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>${httpclient-version}</version>
+        </dependency>
+    </dependencies>
 </project>

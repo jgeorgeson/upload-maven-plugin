@@ -1,4 +1,4 @@
-package org.sonatype.maven.plugins.upload;
+package net.lopht.maven.plugins.upload;
 
 import java.io.File;
 import java.io.IOException;
