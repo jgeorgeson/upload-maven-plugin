@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -43,6 +44,9 @@ public abstract class AbstractUploadMojo
 
     /** @parameter property="upload.repositoryUrl" */
     protected String repositoryUrl;
+
+    /** @parameter **/
+    protected Map<String,String> headers;
 
     protected CloseableHttpClient getHttpClient( ArtifactRepository repository )
         throws MojoExecutionException
@@ -105,6 +109,12 @@ public abstract class AbstractUploadMojo
             }
 
             putRequest.setEntity( new FileEntity( file , contentType ) );
+
+            if (null != headers) {
+                for (Map.Entry<String,String> entry : headers.entrySet()) {
+                    putRequest.addHeader(entry.getKey(), entry.getValue());
+                }
+            }
 
             response = client.execute(putRequest);
 
