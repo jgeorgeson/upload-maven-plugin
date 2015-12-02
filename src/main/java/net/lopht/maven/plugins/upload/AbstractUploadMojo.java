@@ -24,28 +24,30 @@ import org.apache.maven.artifact.repository.layout.ArtifactRepositoryLayout;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugins.annotations.Component;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.repository.Proxy;
 import org.apache.maven.repository.RepositorySystem;
 
 public abstract class AbstractUploadMojo
     extends AbstractMojo
 {
-    /** @component */
+    @Component
     protected RepositorySystem repositorySystem;
 
-    /** @component */
+    @Component
     protected ArtifactRepositoryLayout repositoryLayout;
 
-    /** @parameter property="session" */
+    @Parameter (property="session")
     protected MavenSession session;
 
-    /** @parameter property="upload.serverId" */
+    @Parameter (property="upload.serverId")
     protected String serverId;
 
-    /** @parameter property="upload.repositoryUrl" */
+    @Parameter (property="upload.repositoryUrl")
     protected String repositoryUrl;
 
-    /** @parameter **/
+    @Parameter
     protected Map<String,String> headers;
 
     protected CloseableHttpClient getHttpClient( ArtifactRepository repository )

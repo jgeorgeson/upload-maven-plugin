@@ -75,6 +75,12 @@
             <artifactId>httpclient</artifactId>
             <version>${httpclient-version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.maven.plugin-tools</groupId>
+            <artifactId>maven-plugin-annotations</artifactId>
+            <version>3.4</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>

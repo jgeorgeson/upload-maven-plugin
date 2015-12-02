@@ -6,22 +6,25 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 
 /**
  * Uploads file to remote repository.
  * 
- * @goal upload-file
  */
+@Mojo (name="upload-file", defaultPhase=LifecyclePhase.DEPLOY)
 public class FileUploadMojo
     extends AbstractUploadMojo
 {
-    /** @parameter property="upload.file" */
+    @Parameter (property="upload.file")
     private File file;
 
-    /** @parameter property="upload.repositoryPath" */
+    @Parameter (property="upload.repositoryPath")
     private String repositoryPath;
 
-    /** @parameter default-value="false" */
+    @Parameter (defaultValue="false")
     private boolean ignoreMissingFile;
 
     public void execute()
