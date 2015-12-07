@@ -3,6 +3,7 @@ Maven plugin to upload file(s) with simple HTTP PUT.
 
 This was forked from the Sonatype/maven-upload-plugin, which they've abandoned.
 
+[![Maven Central](https://img.shields.io/maven-central/v/net.lopht.maven-plugins/upload-maven-plugin.svg?style=plastic)](search.maven)
 [![Build Status](https://travis-ci.org/jgeorgeson/upload-maven-plugin.svg)](https://travis-ci.org/jgeorgeson/upload-maven-plugin)
 
 This plugin provides two goals:
