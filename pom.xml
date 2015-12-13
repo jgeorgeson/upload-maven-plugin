@@ -8,6 +8,7 @@
     <packaging>maven-plugin</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
     <url>https://github.com/jgeorgeson/upload-maven-plugin</url>
+    <inceptionYear>2015</inceptionYear>
     <description>Upload file(s) to a URL via HTTP PUT</description>
 
     <licenses>
