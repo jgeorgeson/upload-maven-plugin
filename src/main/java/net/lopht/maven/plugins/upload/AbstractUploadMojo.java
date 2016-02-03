@@ -2,17 +2,23 @@ package net.lopht.maven.plugins.upload;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.AuthCache;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.FileEntity;
+import org.apache.http.impl.auth.BasicScheme;
+import org.apache.http.impl.client.BasicAuthCache;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -47,6 +53,15 @@ public abstract class AbstractUploadMojo
     @Parameter (property="upload.repositoryUrl")
     protected String repositoryUrl;
 
+    /*
+     * @since 0.3.0
+     */
+    @Parameter (property="upload.preemptiveAuth", defaultValue="false")
+    protected boolean preemptiveAuth;
+
+    /*
+     * @since 0.2.0
+     */
     @Parameter
     protected Map<String,String> headers;
 
@@ -58,6 +73,10 @@ public abstract class AbstractUploadMojo
         Authentication authentication = repository.getAuthentication();
         if ( authentication != null )
         {
+            getLog().debug("Found credentials: username="
+                + authentication.getUsername()
+                + " password="
+                + authentication.getPassword());
             CredentialsProvider credsProvider = new BasicCredentialsProvider();
             credsProvider.setCredentials(
                     new AuthScope(AuthScope.ANY),
@@ -66,7 +85,7 @@ public abstract class AbstractUploadMojo
                     .setDefaultCredentialsProvider(credsProvider)
                     .build();
         } else {
-        	client = HttpClients.createDefault();
+            client = HttpClients.createDefault();
         }
 
         Proxy proxy = repository.getProxy();
@@ -104,12 +123,14 @@ public abstract class AbstractUploadMojo
         CloseableHttpResponse response = null;
         try
         {
+            // Set Content type
             ContentType contentType = null;
             if ( file.getName().endsWith( ".xml" ) )
             {
                 contentType = ContentType.APPLICATION_XML;
             }
 
+            // Add the file to the PUT request
             putRequest.setEntity( new FileEntity( file , contentType ) );
 
             if (null != headers) {
@@ -118,7 +139,24 @@ public abstract class AbstractUploadMojo
                 }
             }
 
-            response = client.execute(putRequest);
+            if (preemptiveAuth) {
+                // Auth target host
+                URL aURL = new URL(targetUrl);
+                HttpHost target = new HttpHost (aURL.getHost(), aURL.getPort(), aURL.getProtocol());
+                // Create AuthCache instance
+                AuthCache authCache = new BasicAuthCache();
+                // Generate BASIC scheme object and add it to the local auth cache
+                BasicScheme basicAuth = new BasicScheme();
+                authCache.put(target, basicAuth);
+                // Add AuthCache to the execution context
+                HttpClientContext localContext = HttpClientContext.create();
+                localContext.setAuthCache(authCache);
+                // Execute request with pre-emptive authentication
+                response = client.execute(putRequest,localContext);
+            } else {
+                // Execute request, server will prompt for authentication if needed
+                response = client.execute(putRequest);
+            }
 
             int status = response.getStatusLine().getStatusCode();
             if ( status < 200 || status > 299 )
