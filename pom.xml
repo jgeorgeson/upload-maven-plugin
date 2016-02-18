@@ -4,7 +4,7 @@
 
     <groupId>net.lopht.maven-plugins</groupId>
     <artifactId>upload-maven-plugin</artifactId>
-    <version>0.3.0</version>
+    <version>0.3.1</version>
     <packaging>maven-plugin</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
     <url>https://github.com/lopht/upload-maven-plugin</url>
@@ -40,10 +40,11 @@
     </issueManagement>
 
     <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
+        <repository>
+            <id>bintray-lopht-maven</id>
+            <name>lopht-maven</name>
+            <url>https://api.bintray.com/maven/lopht/maven/upload-maven-plugin/;publish=1</url>
+        </repository>
     </distributionManagement>
 
     <properties>
@@ -83,22 +84,6 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.3</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <serverId>ossrh</serverId>
-                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 
     <profiles>
         <profile>
