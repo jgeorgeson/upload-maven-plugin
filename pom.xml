@@ -7,7 +7,7 @@
     <version>0.3.0</version>
     <packaging>maven-plugin</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
-    <url>https://github.com/jgeorgeson/upload-maven-plugin</url>
+    <url>https://github.com/lopht/upload-maven-plugin</url>
     <inceptionYear>2015</inceptionYear>
     <description>Upload file(s) to a URL via HTTP PUT</description>
 
@@ -19,9 +19,9 @@
     </licenses>
 
     <scm>
-        <url>https://github.com/jgeorgeson/upload-maven-plugin</url>
+        <url>https://github.com/lopht/upload-maven-plugin.git</url>
         <connection>scm:git:https://github.com/jgeorgeson/upload-maven-plugin.git</connection>
-        <developerConnection>scm:git:git@github.com:jgeorgeson/upload-maven-plugin.git</developerConnection>
+        <developerConnection>scm:git:git@github.com:lopht/upload-maven-plugin.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 
@@ -35,7 +35,7 @@
     </developers>
 
     <issueManagement>
-        <url>https://github.com/jgeorgeson/upload-maven-plugin/issues</url>
+        <url>https://github.com/lopht/upload-maven-plugin/issues</url>
         <system>GitHub Issues</system>
     </issueManagement>
 
