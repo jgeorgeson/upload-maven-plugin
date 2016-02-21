@@ -13,21 +13,42 @@ import org.codehaus.plexus.util.DirectoryScanner;
 
 /**
  * Uploads multiple files to remote repository.
- * 
+ *
  */
 @Mojo (name="upload-files", defaultPhase=LifecyclePhase.DEPLOY)
 public class FilesUploadMojo
     extends AbstractUploadMojo
 {
+    /*
+     * The path to the folder to scan for files to upload.
+     *
+     * @since 0.0.1
+     */
     @Parameter (property="upload.basedir", defaultValue="${project.basedir}")
     private File basedir;
 
+    /*
+     * List of Ant file patterns to include from <i>basedir</i>.
+     *
+     * @since 0.0.1
+     */
     @Parameter (property="upload.includes")
     private String[] includes;
 
+    /*
+     * List of Ant file patterns to exclude from <i>basedir</i>.
+     *
+     * @since 0.0.1
+     */
     @Parameter (property="upload.excludes")
     private String[] excludes;
 
+    /*
+     * The server path to the folder where the files will be uploaded, ie path/to/folder.
+     * Will be appended to the <i>repositoryUrl</i> parameter.
+     *
+     * @since 0.1.0
+     */
     @Parameter (property="upload.repositoryBasePath")
     private String repositoryBasepath;
 
