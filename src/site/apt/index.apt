@@ -1,0 +1,13 @@
+upload-maven-plugin
+
+  A maven plugin for direct HTTP PUT upload of a file/folder to a specific server path.
+
+* Goals Overview
+
+  General information about the goals.
+
+  * {{{./upload-file-mojo.html}upload:build}} Upload a single file.
+
+  * {{{./upload-files-mojo.html}upload:push}} Scan a folder and upload contents.
+
+  * {{{./help-mojo.html}upload:help}} Displays help for the plugin.
