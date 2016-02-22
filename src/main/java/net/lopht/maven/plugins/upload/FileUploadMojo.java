@@ -12,19 +12,35 @@ import org.apache.maven.plugins.annotations.Parameter;
 
 /**
  * Uploads file to remote repository.
- * 
+ *
  */
 @Mojo (name="upload-file", defaultPhase=LifecyclePhase.DEPLOY)
 public class FileUploadMojo
     extends AbstractUploadMojo
 {
+    /**
+     * The path to the file to be uploaded.
+     *
+     * @since 0.0.1
+     */
     @Parameter (property="upload.file")
     private File file;
 
+    /**
+     * The server path where the file will be uploaded, ie path/to/file.ext.
+     * Will be appended to the <i>repositoryUrl</i> parameter.
+     *
+     * @since 0.0.1
+     */
     @Parameter (property="upload.repositoryPath")
     private String repositoryPath;
 
-    @Parameter (defaultValue="false")
+    /**
+     * If true, fail build when file is missing.
+     *
+     * @since 0.0.1
+     */
+    @Parameter (property="upload.ignoreMissing", defaultValue="false")
     private boolean ignoreMissingFile;
 
     public void execute()

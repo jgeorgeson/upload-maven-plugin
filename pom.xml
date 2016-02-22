@@ -6,7 +6,7 @@
     <artifactId>upload-maven-plugin</artifactId>
     <version>0.3.1</version>
     <packaging>maven-plugin</packaging>
-    <name>${project.groupId}:${project.artifactId}</name>
+    <name>Upload Maven Plugin</name>
     <url>https://github.com/lopht/upload-maven-plugin</url>
     <inceptionYear>2015</inceptionYear>
     <description>Upload file(s) to a URL via HTTP PUT</description>
@@ -19,7 +19,7 @@
     </licenses>
 
     <scm>
-        <url>https://github.com/lopht/upload-maven-plugin.git</url>
+        <url>https://github.com/lopht/upload-maven-plugin</url>
         <connection>scm:git:https://github.com/jgeorgeson/upload-maven-plugin.git</connection>
         <developerConnection>scm:git:git@github.com:lopht/upload-maven-plugin.git</developerConnection>
         <tag>HEAD</tag>
@@ -47,6 +47,10 @@
         </repository>
     </distributionManagement>
 
+    <prerequisites>
+        <maven>3.0</maven>
+    </prerequisites>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven-version>3.0.5</maven-version>
@@ -56,26 +60,13 @@
     <dependencies>
         <dependency>
             <groupId>org.apache.maven</groupId>
-            <artifactId>maven-plugin-api</artifactId>
-            <version>${maven-version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.maven</groupId>
-            <artifactId>maven-compat</artifactId>
-            <version>${maven-version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.maven</groupId>
             <artifactId>maven-core</artifactId>
             <version>${maven-version}</version>
         </dependency>
-
         <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>${httpclient-version}</version>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-plugin-api</artifactId>
+            <version>${maven-version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.maven.plugin-tools</groupId>
@@ -83,17 +74,81 @@
             <version>3.4</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>${httpclient-version}</version>
+        </dependency>
     </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-plugin-plugin</artifactId>
+                    <version>3.4</version>
+                    <configuration>
+                        <goalPrefix>upload</goalPrefix>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-project-info-reports-plugin</artifactId>
+                    <version>2.8.1</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-plugin-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>default-descriptor</id>
+                        <goals>
+                            <goal>descriptor</goal>
+                        </goals>
+                        <phase>process-classes</phase>
+                    </execution>
+                    <!-- if you want to generate help goal -->
+                    <execution>
+                        <id>help-goal</id>
+                        <goals>
+                            <goal>helpmojo</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-plugin-plugin</artifactId>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>report</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+        </plugins>
+    </reporting>
 
     <profiles>
         <profile>
             <id>release</id>
             <build>
                 <plugins>
+                    <!-- Attach source -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
-                        <version>2.4</version>
+                        <version>3.0.0</version>
                         <executions>
                             <execution>
                                 <id>attach-sources</id>
@@ -103,6 +158,7 @@
                             </execution>
                         </executions>
                     </plugin>
+                    <!-- Attach javadoc -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
@@ -122,6 +178,7 @@
                             <additionalparam>-Xdoclint:none</additionalparam>
                         </configuration>
                     </plugin>
+                    <!-- Sign artifacts -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
@@ -136,6 +193,23 @@
                                 <configuration>
                                     <passphraseServerId>${gpg.keyname}</passphraseServerId>
                                 </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- "Publish" site docs to gh-pages branch-->
+                    <plugin>
+                        <groupId>com.github.github</groupId>
+                        <artifactId>site-maven-plugin</artifactId>
+                        <version>0.12</version>
+                        <configuration>
+                            <message>Creating site for ${project.version}</message>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>site</goal>
+                                </goals>
+                                <phase>site</phase>
                             </execution>
                         </executions>
                     </plugin>
