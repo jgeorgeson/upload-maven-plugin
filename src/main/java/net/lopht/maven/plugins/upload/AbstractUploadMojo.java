@@ -44,10 +44,13 @@ public abstract class AbstractUploadMojo
     @Component
     protected ArtifactRepositoryLayout repositoryLayout;
 
+    /**
+     * @since 0.0.1
+     */
     @Parameter (property="session")
     protected MavenSession session;
 
-    /*
+    /**
      * The server Id in settings.xml with credentials to use.
      *
      * @since 0.0.1
@@ -55,7 +58,7 @@ public abstract class AbstractUploadMojo
     @Parameter (property="upload.serverId")
     protected String serverId;
 
-    /*
+    /**
      * The base URL of the server, ie http://server.example.com/.
      *
      * @since 0.0.1
@@ -63,7 +66,7 @@ public abstract class AbstractUploadMojo
     @Parameter (property="upload.repositoryUrl")
     protected String repositoryUrl;
 
-    /*
+    /**
      * Set to true if the server requires credentials in the initial request.
      *
      * @since 0.3.0
@@ -71,7 +74,7 @@ public abstract class AbstractUploadMojo
     @Parameter (property="upload.preemptiveAuth", defaultValue="false")
     protected boolean preemptiveAuth;
 
-    /*
+    /**
      * Custom HTTP headers to add to each request.
      *
      * @since 0.2.0
