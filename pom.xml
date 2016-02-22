@@ -19,7 +19,7 @@
     </licenses>
 
     <scm>
-        <url>https://github.com/lopht/upload-maven-plugin.git</url>
+        <url>https://github.com/lopht/upload-maven-plugin</url>
         <connection>scm:git:https://github.com/jgeorgeson/upload-maven-plugin.git</connection>
         <developerConnection>scm:git:git@github.com:lopht/upload-maven-plugin.git</developerConnection>
         <tag>HEAD</tag>
