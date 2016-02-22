@@ -37,7 +37,7 @@ public class FileUploadMojo
      * If true, fail build when file is missing.
      * @since 0.0.1
      */
-    @Parameter (defaultValue="false")
+    @Parameter (property="upload.ignoreMissing" defaultValue="false")
     private boolean ignoreMissingFile;
 
     public void execute()
