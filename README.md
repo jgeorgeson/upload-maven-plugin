@@ -10,3 +10,5 @@ This plugin provides two goals:
 
 * upload-file: Upload a single file.
 * upload-files: Scans a base directory and uploads all files, filtered by include/exclude lists.
+
+See [plugin docs](https://lopht.github.io/upload-maven-plugin) for details. 
