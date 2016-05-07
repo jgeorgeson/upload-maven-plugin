@@ -1,0 +1,51 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>net.lopht.maven-plugins</groupId>
+    <artifactId>upload-file</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>IT :: upload single file</name>
+    <url>http://maven.apache.org</url>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.8.2</version>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>upload-maven-plugin</artifactId>
+                <version>${project.version}</version>
+                <configuration>
+                    <serverId>playground</serverId>
+                    <repositoryUrl>http://playground/artifactory</repositoryUrl>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>publish-file</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>upload-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>${project.basedir}/file1.txt</file>
+                            <repositoryPath>/libs-snapshot-local/upload-file/file1.txt</repositoryPath>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
