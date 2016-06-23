@@ -36,7 +36,7 @@ public class FileUploadMojo
     private String repositoryPath;
 
     /**
-     * If true, fail build when file is missing.
+     * If true, do not fail build when file is missing.
      *
      * @since 0.0.1
      */
