@@ -67,6 +67,14 @@ public abstract class AbstractUploadMojo
     protected String repositoryUrl;
 
     /**
+     * Set to true to skip execution.
+     *
+     * @since 0.4.0
+     */
+    @Parameter (property="upload.skip", defaultValue="false")
+    protected boolean skip;
+
+    /**
      * Set to true if the server requires credentials in the initial request.
      *
      * @since 0.3.0

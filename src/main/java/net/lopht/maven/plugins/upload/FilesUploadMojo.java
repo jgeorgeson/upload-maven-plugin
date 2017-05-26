@@ -55,6 +55,11 @@ public class FilesUploadMojo
     public void execute()
         throws MojoExecutionException, MojoFailureException
     {
+        if (skip) {
+            getLog().info("Skipping execution per configuration");
+            return;
+        }
+
         ArtifactRepository repository = getArtifactRepository();
 
         CloseableHttpClient client = getHttpClient( repository );

@@ -46,6 +46,11 @@ public class FileUploadMojo
     public void execute()
         throws MojoExecutionException, MojoFailureException
     {
+        if (skip) {
+            getLog().info("Skipping execution per configuration");
+            return;
+        }
+
         if ( ignoreMissingFile && !file.exists() )
         {
             getLog().info( "File does not exist, ignoring " + file.getAbsolutePath() );
