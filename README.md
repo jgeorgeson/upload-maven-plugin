@@ -1,5 +1,5 @@
 # upload-maven-plugin
-Maven plugin to upload file(s) with simple HTTP PUT.
+Maven plugin to upload file(s) with simple HTTP PUT/POST.
 
 This was forked from the Sonatype/maven-upload-plugin, which they've abandoned.
 

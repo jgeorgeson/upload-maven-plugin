@@ -13,6 +13,8 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.AuthCache;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.entity.ContentType;
@@ -90,6 +92,14 @@ public abstract class AbstractUploadMojo
     @Parameter
     protected Map<String,String> headers;
 
+    /**
+     * Use POST instead of PUT
+     *
+     * @since 0.5.0
+     */
+    @Parameter (property="upload.post", defaultValue="false")
+    protected boolean usePOST;
+
     protected CloseableHttpClient getHttpClient( ArtifactRepository repository )
         throws MojoExecutionException
     {
@@ -144,7 +154,12 @@ public abstract class AbstractUploadMojo
         throws MojoExecutionException
     {
         getLog().info( "Uploading " + file.getAbsolutePath() + " to " + targetUrl );
-        HttpPut putRequest = new HttpPut(targetUrl);
+        HttpEntityEnclosingRequestBase request;
+        if (usePOST) {
+            request = new HttpPost(targetUrl);
+        } else {
+            request = new HttpPut(targetUrl);
+        }
         CloseableHttpResponse response = null;
         try
         {
@@ -156,11 +171,11 @@ public abstract class AbstractUploadMojo
             }
 
             // Add the file to the PUT request
-            putRequest.setEntity( new FileEntity( file , contentType ) );
+            request.setEntity( new FileEntity( file , contentType ) );
 
             if (null != headers) {
                 for (Map.Entry<String,String> entry : headers.entrySet()) {
-                    putRequest.addHeader(entry.getKey(), entry.getValue());
+                    request.addHeader(entry.getKey(), entry.getValue());
                 }
             }
 
@@ -177,10 +192,10 @@ public abstract class AbstractUploadMojo
                 HttpClientContext localContext = HttpClientContext.create();
                 localContext.setAuthCache(authCache);
                 // Execute request with pre-emptive authentication
-                response = client.execute(putRequest,localContext);
+                response = client.execute(request,localContext);
             } else {
                 // Execute request, server will prompt for authentication if needed
-                response = client.execute(putRequest);
+                response = client.execute(request);
             }
 
             int status = response.getStatusLine().getStatusCode();
@@ -202,7 +217,7 @@ public abstract class AbstractUploadMojo
         }
         finally
         {
-           	putRequest.releaseConnection();
+           	request.releaseConnection();
         }
     }
 

@@ -1,6 +1,6 @@
 upload-maven-plugin
 
-  A maven plugin for direct HTTP PUT upload of a file/folder to a specific server path.
+  A maven plugin for direct HTTP PUT/POST upload of a file/folder to a specific server path.
 
 * Goals Overview
 
