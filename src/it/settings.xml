@@ -1,0 +1,17 @@
+<settings>
+  <servers>
+    <server>
+        <id>it-auth-good</id>
+        <username>user01</username>
+        <password>goodpass</password>
+    </server>
+    <server>
+        <id>it-auth-bad</id>
+        <username>user01</username>
+        <password>badpass</password>
+    </server>
+  </servers>
+  <pluginGroups>
+    <pluginGroup>net.lopht.maven-plugins</pluginGroup>
+  </pluginGroups>
+</settings>
