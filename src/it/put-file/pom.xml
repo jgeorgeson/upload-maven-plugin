@@ -1,0 +1,42 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>@project.groupId@.it</groupId>
+    <artifactId>it-put-file</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>IT :: PUT single file</name>
+    <url>http://maven.apache.org</url>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>@project.groupId@</groupId>
+                <artifactId>@project.artifactId@</artifactId>
+                <version>@project.version@</version>
+                <configuration>
+                    <repositoryUrl>${goodServer}</repositoryUrl>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>publish-file</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>upload-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>@project.basedir@/src/it/files/file1.txt</file>
+                            <repositoryPath>/it-put-file/file1.txt</repositoryPath>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
