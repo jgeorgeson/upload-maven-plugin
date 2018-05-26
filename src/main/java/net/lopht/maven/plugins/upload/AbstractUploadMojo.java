@@ -23,7 +23,9 @@ import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.BasicAuthCache;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.client.ProxyAuthenticationStrategy;
 import org.apache.http.util.EntityUtils;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.repository.ArtifactRepositoryPolicy;
@@ -103,7 +105,8 @@ public abstract class AbstractUploadMojo
     protected CloseableHttpClient getHttpClient( ArtifactRepository repository )
         throws MojoExecutionException
     {
-        CloseableHttpClient client;
+        HttpClientBuilder clientBuilder = HttpClients.custom();
+        CredentialsProvider credsProvider = null;
 
         Authentication authentication = repository.getAuthentication();
         if ( authentication != null )
@@ -112,23 +115,42 @@ public abstract class AbstractUploadMojo
                 + authentication.getUsername()
                 + " password="
                 + authentication.getPassword());
-            CredentialsProvider credsProvider = new BasicCredentialsProvider();
+            credsProvider = new BasicCredentialsProvider();
             credsProvider.setCredentials(
                     new AuthScope(AuthScope.ANY),
                     new UsernamePasswordCredentials(authentication.getUsername(),authentication.getPassword()));
-            client = HttpClients.custom()
-                    .setDefaultCredentialsProvider(credsProvider)
-                    .build();
-        } else {
-            client = HttpClients.createDefault();
+            clientBuilder.setDefaultCredentialsProvider(credsProvider);
         }
 
         Proxy proxy = repository.getProxy();
         if ( proxy != null )
         {
-            throw new MojoExecutionException( "Proxy is not supporyed yet" );
+            // NonProxyHosts is handled by ArtifactRepository, the Proxy will not be present here for NonProxyHosts
+            if ( proxy.getProtocol() == null || proxy.getProtocol().equalsIgnoreCase(Proxy.PROXY_HTTP) )
+            {
+                getLog().debug("Found Proxy configuration: " + proxy.getHost() + ":" + proxy.getPort());
+                HttpHost proxyHost = new HttpHost(proxy.getHost(), proxy.getPort());
+                clientBuilder.setProxy(proxyHost);
+
+                if ( proxy.getUserName() != null )
+                {
+                    getLog().debug("Found proxy credentials: username=" + proxy.getUserName());
+                    // Add CredentialsProvider if one was not added for target host Authentication
+                    if ( credsProvider == null )
+                    {
+                        credsProvider = new BasicCredentialsProvider();
+                        clientBuilder.setDefaultCredentialsProvider(credsProvider);
+                    }
+                    credsProvider.setCredentials(
+                            new AuthScope(proxyHost), 
+                            new UsernamePasswordCredentials(proxy.getUserName(), proxy.getPassword()));
+                    clientBuilder.setProxyAuthenticationStrategy(new ProxyAuthenticationStrategy());
+                }
+            } else {
+                throw new MojoExecutionException("Proxy protocol " + proxy.getProtocol() + " is not supported yet");
+            }
         }
-        return client;
+        return clientBuilder.build();
     }
 
     protected ArtifactRepository getArtifactRepository()
